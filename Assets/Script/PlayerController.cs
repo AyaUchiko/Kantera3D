@@ -9,13 +9,16 @@ public class PlayerController : MonoBehaviour
     {
         Stand,     //立ち
         Walk,      //歩き
-        Run,       //走り
+        Dash,      //走り
     }
     public EPlayerState currentState = EPlayerState.Stand;  //最初は立ち
 
     public float moveSpeed;             //プレイヤーの移動速度
     public float walkSpeed;             //プレイヤーの歩く速度
-    public float runSpeed;              //プレイヤーの走る速度
+    public float dashSpeed;             //プレイヤーのダッシュ速度
+
+    public Dashing dash;
+    public bool dashing;
     private Vector2 moveInput;          //移動のための入力値(Vector2)を保持する変数
     private bool Right = true;          //最初は右向き
     public TextMeshProUGUI textState;   //Stateを表示するテキスト
@@ -37,17 +40,21 @@ public class PlayerController : MonoBehaviour
         textState.text = "State:" + currentState.ToString();
 
         PlayerAction();
+
+        //アニメーション処理
+        anim.SetBool("isWalk", moveInput.x != 0);
+        anim.SetBool("isDash", dashing);
     }
 
     void PlayerStateChange()
     {
-        if (moveInput.x != 0 && moveSpeed < runSpeed)
+        if (dashing)
+        {
+            currentState = EPlayerState.Dash;
+        }
+        else if (moveInput.x != 0)
         {
             currentState = EPlayerState.Walk;
-        }
-        else if (moveInput.x != 0 && moveSpeed >= runSpeed )
-        {
-            currentState = EPlayerState.Run;
         }
         else
         {
@@ -65,9 +72,9 @@ public class PlayerController : MonoBehaviour
         {
             PlayerWalk();
         }
-        if (currentState == EPlayerState.Run)
+        if (currentState == EPlayerState.Dash)
         {
-            PlayerRun();
+            PlayerDush();
         }
     }
 
@@ -81,9 +88,9 @@ public class PlayerController : MonoBehaviour
         anim.Play("PlayerWalk");
     }
 
-    void PlayerRun()
+    void PlayerDush()
     {
-        anim.Play("PlayerRun");
+        anim.Play("PlayerDush");
     }
 
     private void Move()
@@ -118,6 +125,9 @@ public class PlayerController : MonoBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        moveSpeed = runSpeed;
+        if (context.started)
+        {
+            dash.Dash();
+        }
     }
 }
