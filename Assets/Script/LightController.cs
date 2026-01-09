@@ -14,8 +14,8 @@ public class LightController : MonoBehaviour
     public float maxIntensity;     //最大範囲
     public float miniIntensity;    //最小範囲
 
-    float range;                   //現在の値を保持
-    float intensity;               //現在の値を保持
+    public float range;            //現在の値を保持
+    public float intensity;        //現在の値を保持
     bool lightUp;
     bool lightDown;
 

@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
 
     void PlayerStand()
     {
-        anim.Play("PlayerStand");
+        anim.Play("PlayerIdle");
     }
     void PlayerWalk()
     {
