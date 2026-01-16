@@ -4,12 +4,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    //プレイヤーの行動リスト
+    //プレイヤーの状態リスト
     public enum EPlayerState
     {
         Stand,     //立ち
         Walk,      //歩き
         Dash,      //走り
+        Jump,      //ジャンプ
+        Desu,      //死亡
     }
     public EPlayerState currentState = EPlayerState.Stand;  //最初は立ち
 
@@ -123,7 +125,7 @@ public class PlayerController : MonoBehaviour
             Flip();
         }
     }
-    public void OnJump(InputAction.CallbackContext context)
+    public void OnDash(InputAction.CallbackContext context)
     {
         if (context.started)
         {
