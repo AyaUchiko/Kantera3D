@@ -231,7 +231,7 @@
                 {
                     "name": "",
                     "id": "3227b2be-80f4-407d-b949-b9a166b0b0bf",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

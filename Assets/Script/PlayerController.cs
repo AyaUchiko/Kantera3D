@@ -15,20 +15,33 @@ public class PlayerController : MonoBehaviour
     }
     public EPlayerState currentState = EPlayerState.Stand;  //最初は立ち
 
+    //移動速度関連の変数
     public float moveSpeed;             //プレイヤーの移動速度
     public float walkSpeed;             //プレイヤーの歩く速度
-    public float dashSpeed;             //プレイヤーのダッシュ速度
 
+    //ダッシュ関連の変数
     public Dashing dash;
     public bool dashing;
+    public float dashSpeed;             //プレイヤーのダッシュ速度
+
+    //ジャンプ関連の変数
+    bool isGround;                      //地面に接地しているかどうか
+    public float jumpForce;             //プレイヤーのジャンプ力
+
+
+    Rigidbody rb;
     private Vector2 moveInput;          //移動のための入力値(Vector2)を保持する変数
     private bool Right = true;          //最初は右向き
+
     public TextMeshProUGUI textState;   //Stateを表示するテキスト
     private Animator anim;
 
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
+
+        isGround = false;
 
         textState.text = "State:";
     }
@@ -58,6 +71,10 @@ public class PlayerController : MonoBehaviour
         {
             currentState = EPlayerState.Walk;
         }
+        else if(!isGround)
+        {
+            currentState = EPlayerState.Jump;
+        }
         else
         {
             currentState = EPlayerState.Stand;
@@ -78,6 +95,10 @@ public class PlayerController : MonoBehaviour
         {
             PlayerDush();
         }
+        if (currentState == EPlayerState.Jump)
+        {
+            PlayerJump();
+        }
     }
 
     void PlayerStand()
@@ -93,6 +114,10 @@ public class PlayerController : MonoBehaviour
     void PlayerDush()
     {
         anim.Play("PlayerDush");
+    }
+    void PlayerJump()
+    {
+        anim.Play("PlayerJump");
     }
 
     private void Move()
@@ -130,6 +155,14 @@ public class PlayerController : MonoBehaviour
         if (context.started)
         {
             dash.Dash();
+        }
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if(isGround)
+        {
+            isGround = false;
+            rb.AddForce(transform.up * jumpForce);
         }
     }
 }

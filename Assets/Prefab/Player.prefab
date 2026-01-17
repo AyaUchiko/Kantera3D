@@ -415,9 +415,10 @@ MonoBehaviour:
   currentState: 0
   moveSpeed: 0.5
   walkSpeed: 0.5
-  dashSpeed: 0
   dash: {fileID: 8512722125392504971}
   dashing: 0
+  dashSpeed: 0
+  jumpForce: 0
   textState: {fileID: 0}
 --- !u!114 &7493977853686373127
 MonoBehaviour:

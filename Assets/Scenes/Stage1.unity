@@ -2531,6 +2531,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7493977853686373127, guid: ca9e7e4f01a74694587d49adc86bac48, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7493977853686373127, guid: ca9e7e4f01a74694587d49adc86bac48, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_ActionId
+      value: 79d19ad4-b622-410d-88a8-0d19e8f89297
+      objectReference: {fileID: 0}
+    - target: {fileID: 7493977853686373127, guid: ca9e7e4f01a74694587d49adc86bac48, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_ActionName
+      value: 'Player/Jump[/Keyboard/enter]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7493977853686373127, guid: ca9e7e4f01a74694587d49adc86bac48, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7493977853686373127, guid: ca9e7e4f01a74694587d49adc86bac48, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7493977853686373127, guid: ca9e7e4f01a74694587d49adc86bac48, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11500000, guid: 7bd14e91e9540e34abf78883e958806a, type: 3}
+    - target: {fileID: 7493977853686373127, guid: ca9e7e4f01a74694587d49adc86bac48, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8388865006304368665, guid: ca9e7e4f01a74694587d49adc86bac48, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
