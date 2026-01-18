@@ -417,8 +417,8 @@ MonoBehaviour:
   walkSpeed: 0.5
   dash: {fileID: 8512722125392504971}
   dashing: 0
-  dashSpeed: 0
-  jumpForce: 0
+  dashSpeed: 5
+  jumpForce: 3
   textState: {fileID: 0}
 --- !u!114 &7493977853686373127
 MonoBehaviour:
@@ -525,6 +525,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: e0c99942-5e9d-434d-8773-a8e330bece1d
     m_ActionName: 'Player/LightDown[/XInputControllerWindows/rightStick/down,/Mouse/scroll/down]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1659546844398624801}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 79d19ad4-b622-410d-88a8-0d19e8f89297
+    m_ActionName: 'Player/Jump[/Keyboard/enter,/XInputControllerWindows/buttonEast]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

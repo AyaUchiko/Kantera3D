@@ -7,122 +7,108 @@ public class PlayerController : MonoBehaviour
     //プレイヤーの状態リスト
     public enum EPlayerState
     {
-        Stand,     //立ち
-        Walk,      //歩き
-        Dash,      //走り
-        Jump,      //ジャンプ
-        Desu,      //死亡
+        Stand,
+        Walk,      
+        Dash,      
+        Jump,      
+        Dead,      
     }
-    public EPlayerState currentState = EPlayerState.Stand;  //最初は立ち
+    public EPlayerState currentState = EPlayerState.Stand;  
 
     //移動速度関連の変数
-    public float moveSpeed;             //プレイヤーの移動速度
-    public float walkSpeed;             //プレイヤーの歩く速度
+    public float moveSpeed;             
+    public float walkSpeed;            
 
     //ダッシュ関連の変数
     public Dashing dash;
     public bool dashing;
-    public float dashSpeed;             //プレイヤーのダッシュ速度
+    public float dashSpeed;        
 
     //ジャンプ関連の変数
-    bool isGround;                      //地面に接地しているかどうか
-    public float jumpForce;             //プレイヤーのジャンプ力
+    bool isGround;                    
+    public float jumpForce;
+    private int groundCount = 0;
 
 
     Rigidbody rb;
-    private Vector2 moveInput;          //移動のための入力値(Vector2)を保持する変数
-    private bool Right = true;          //最初は右向き
+    private Vector2 moveInput;         
+    private bool Right = true;       
 
-    public TextMeshProUGUI textState;   //Stateを表示するテキスト
-    private Animator anim;
+    public TextMeshProUGUI textState;
+    PlayerAnimator playerAnimator;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        anim = GetComponent<Animator>();
+        playerAnimator = GetComponent<PlayerAnimator>();
 
-        isGround = false;
+        isGround = true;
+    }
 
-        textState.text = "State:";
+    void FixedUpdate()
+    {
+        Move();
     }
     void Update()
     {
-        //移動処理を実行する
-        Move();
-
-        //現在のStateを表示する
         PlayerStateChange();
+        SendAnimState();
+
         textState.text = "State:" + currentState.ToString();
-
-        PlayerAction();
-
-        //アニメーション処理
-        anim.SetBool("isWalk", moveInput.x != 0);
-        anim.SetBool("isDash", dashing);
     }
 
     void PlayerStateChange()
     {
+        if (currentState == EPlayerState.Dead) return;
+
+        if (!isGround)
+        {
+            currentState = EPlayerState.Jump;
+            return;
+        }
+
         if (dashing)
         {
             currentState = EPlayerState.Dash;
+            return;
         }
-        else if (moveInput.x != 0)
+
+        if (moveInput.x != 0)
         {
             currentState = EPlayerState.Walk;
+            moveSpeed = walkSpeed;
+            return;
         }
-        else if(!isGround)
+
+        currentState = EPlayerState.Stand;
+    }
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if(col.gameObject.CompareTag("Ground"))
         {
-            currentState = EPlayerState.Jump;
-        }
-        else
-        {
-            currentState = EPlayerState.Stand;
+            groundCount++;
+            isGround = true;
         }
     }
 
-    void PlayerAction()
+    private void OnCollisionExit(Collision col)
     {
-        if (currentState == EPlayerState.Stand)
+        if(col.gameObject.CompareTag("Ground"))
         {
-            PlayerStand();
+            groundCount--;
+            if(groundCount<=0)
+            {
+                isGround = false;
+                groundCount = 0;
+            }
         }
-        if (currentState == EPlayerState.Walk)
-        {
-            PlayerWalk();
-        }
-        if (currentState == EPlayerState.Dash)
-        {
-            PlayerDush();
-        }
-        if (currentState == EPlayerState.Jump)
-        {
-            PlayerJump();
-        }
-    }
-
-    void PlayerStand()
-    {
-        anim.Play("PlayerIdle");
-    }
-    void PlayerWalk()
-    {
-        moveSpeed = walkSpeed;
-        anim.Play("PlayerWalk");
-    }
-
-    void PlayerDush()
-    {
-        anim.Play("PlayerDush");
-    }
-    void PlayerJump()
-    {
-        anim.Play("PlayerJump");
     }
 
     private void Move()
     {
-        transform.Translate(moveInput * moveSpeed * Time.deltaTime);
+        if (dashing) return;
+        rb.linearVelocity = new Vector3(moveInput.x * moveSpeed, rb.linearVelocity.y, 0f);
     }
 
     private void Flip()
@@ -137,7 +123,6 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        PlayerWalk();
         moveInput = context.ReadValue<Vector2>();
 
         //入力値のｘが０ではないときだけ向きをチェック
@@ -159,10 +144,32 @@ public class PlayerController : MonoBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if(isGround)
+        if(context.started&&isGround)
         {
             isGround = false;
-            rb.AddForce(transform.up * jumpForce);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, 0f);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }    
+    }
+    void SendAnimState()
+    {
+        switch (currentState)
+        {
+            case EPlayerState.Stand:
+                playerAnimator.ChangeState(PlayerAnimator.EPlayerAnimState.PlayerIdle);
+                break;
+            case EPlayerState.Walk:
+                playerAnimator.ChangeState(PlayerAnimator.EPlayerAnimState.PlayerWalk);
+                break;
+            case EPlayerState.Dash:
+                playerAnimator.ChangeState(PlayerAnimator.EPlayerAnimState.PlayerDash);
+                break;
+            case EPlayerState.Jump:
+                playerAnimator.ChangeState(PlayerAnimator.EPlayerAnimState.PlayerJump);
+                break;
+            case EPlayerState.Dead:
+                playerAnimator.ChangeState(PlayerAnimator.EPlayerAnimState.PlayerDead);
+                break;
         }
     }
 }
