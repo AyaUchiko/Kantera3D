@@ -2,15 +2,20 @@ using UnityEngine;
 
 public class LightCharge : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void OnTriggerStay(Collider other)
     {
-        
-    }
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("”ÍˆÍ“à");
+            PlayerController player = other.GetComponent<PlayerController>();
+            GaugeController gauge = FindFirstObjectByType<GaugeController>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+            if (player != null && player.ChargeAction && gauge != null)
+            {
+                gauge.FullRecovery();
+                Debug.Log("‘S‰ñ•œ");
+                gameObject.SetActive(false);
+            }
+        }
     }
 }

@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class Dashing : MonoBehaviour
 {
-    [Header("References")]
+    [Header("参照")]
     public Transform orientation;
     public Transform playerCam;
     private Rigidbody rb;
     private PlayerController pc;
 
-    [Header("Dashing")]
+    [Header("ダッシュ設定")]
     public float dashForce;                 //ダッシュ時に加える力
     public float dashDuration;              //ダッシュの持続時間
     private Vector3 delayedForceToApply;
 
-    [Header("CoolDown")]
+    [Header("クールダウン")]
     public float dashCd;        //ダッシュのクールダウン時間
     private float dashCdTimer;
 

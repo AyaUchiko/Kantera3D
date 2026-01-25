@@ -37,8 +37,10 @@ public class PlayerController : MonoBehaviour
     public Vector2 moveInput;         
     private bool Right = true;
     private PushBox currentPushBox;
-    private bool isPushAction = false;
-    private bool isDead = false;
+    private bool pushAction = false;
+    private bool dead = false;
+    private bool chargeAction = false;
+    public bool ChargeAction => chargeAction;
     public float pushSpeed = 2f;
 
     public TextMeshProUGUI textState;
@@ -49,7 +51,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<PlayerAnimator>();
 
-        isDead = false;
+        dead = false;
         currentState = EPlayerState.Stand;
         isGround = true;
     }
@@ -58,7 +60,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
 
-        if (currentPushBox != null && isPushAction == true)
+        if (currentPushBox != null && pushAction == true)
         {
             currentPushBox.MoveBox(moveInput.x, pushSpeed);
         }
@@ -90,7 +92,7 @@ public class PlayerController : MonoBehaviour
         if (moveInput.x != 0)
         {
             currentState = EPlayerState.Walk;
-            if (isPushAction == true)
+            if (pushAction == true)
             {
                 moveSpeed = pushSpeed;
             }
@@ -104,9 +106,10 @@ public class PlayerController : MonoBehaviour
         currentState = EPlayerState.Stand;
     }
 
-    private IEnumerator DeadProcess()
+    public IEnumerator DeadProcess()
     {
-        isDead = true;
+        if (dead) yield break;
+        dead = true;
         currentState = EPlayerState.Dead;
         rb.linearVelocity = Vector3.zero;
 
@@ -144,7 +147,7 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = context.ReadValue<Vector2>();
 
-        if (isPushAction == false)
+        if (pushAction == false)
         {
             if (moveInput.x < 0 && Right)
             {
@@ -176,20 +179,31 @@ public class PlayerController : MonoBehaviour
     {
         if (currentPushBox == null)
         {
-            isPushAction = false;
+            pushAction = false;
             return;
         }
 
         if (context.started)
         {
-            isPushAction = true;
+            pushAction = true;
             currentPushBox.SetPush(true);
         }
 
         if (context.canceled)
         {
-            isPushAction = false;
+            pushAction = false;
             currentPushBox.SetPush(false);
+        }
+    }
+    public void OnCharge(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            chargeAction = true;
+        }
+        else if (context.canceled)
+        {
+            chargeAction = false;
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -199,7 +213,7 @@ public class PlayerController : MonoBehaviour
             currentPushBox = other.GetComponent<PushBox>();
         }
 
-        if (other.CompareTag("EnemyAttack") && !isDead)
+        if (other.CompareTag("EnemyAttack") && !dead)
         {
             StartCoroutine(DeadProcess());
         }
@@ -221,7 +235,7 @@ public class PlayerController : MonoBehaviour
             isGround = true;
         }
 
-        if (col.gameObject.CompareTag("Enemy") && !isDead)
+        if (col.gameObject.CompareTag("Enemy") && !dead)
         {
             StartCoroutine(DeadProcess());
         }

@@ -11,7 +11,7 @@ public class GaugeController : MonoBehaviour
     float currentEnergy;
     float count;
 
-    public TextMeshProUGUI textReset;   //何秒で消費するかを表示するテキスト
+    public TextMeshProUGUI textReset;
 
     void Start()
     {
@@ -27,9 +27,14 @@ public class GaugeController : MonoBehaviour
         if (count <= 0)
         {
             currentEnergy -= 1;
-            gaugeImage.fillAmount = currentEnergy / 100;
+            gaugeImage.fillAmount = currentEnergy / maxEnergy;
             ResetCount();
         }
+
+        if (currentEnergy <= 0) return;
+
+        ConsumeEnergy();
+        CheckDeath();
 
         textReset.text =count.ToString();
     }
@@ -59,6 +64,41 @@ public class GaugeController : MonoBehaviour
         else
         {
             count = 0.1f;
+        }
+    }
+    public void FullRecovery()
+    {
+        currentEnergy = maxEnergy;
+        if (gaugeImage != null)
+        {
+            gaugeImage.fillAmount = currentEnergy / maxEnergy;
+        }
+    }
+
+    void ConsumeEnergy()
+    {
+        count -= Time.deltaTime;
+        if (count <= 0)
+        {
+            currentEnergy -= 1;
+            gaugeImage.fillAmount = currentEnergy / maxEnergy;
+            ResetCount();
+        }
+    }
+
+    void CheckDeath()
+    {
+        if (currentEnergy <= 0)
+        {
+            currentEnergy = 0;
+
+            // プレイヤーのコンポーネントを探す
+            PlayerController player = FindFirstObjectByType<PlayerController>();
+            if (player != null)
+            {
+                // PlayerController内の死亡処理をスタート！
+                player.StartCoroutine(player.DeadProcess());
+            }
         }
     }
 }
