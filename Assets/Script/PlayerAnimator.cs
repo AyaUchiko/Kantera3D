@@ -41,7 +41,6 @@ public class PlayerAnimator : MonoBehaviour
 
     private void ChangeAnimation(string animName,float fadeTime)
     {
-        Debug.Log("CrossFade Å® " + animName);
         if (currentAnimName == animName) return;
 
         currentAnimName = animName;

@@ -31,8 +31,10 @@ public class PlayerController : MonoBehaviour
 
 
     Rigidbody rb;
-    private Vector2 moveInput;         
-    private bool Right = true;       
+    public Vector2 moveInput;         
+    private bool Right = true;
+    private PushBox currentPushBox;
+    public float pushSpeed = 2f;
 
     public TextMeshProUGUI textState;
     PlayerAnimator playerAnimator;
@@ -48,6 +50,11 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Move();
+
+        if (currentPushBox != null)
+        {
+            currentPushBox.MoveBox(moveInput.x, pushSpeed);
+        }
     }
     void Update()
     {
@@ -150,6 +157,35 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, 0f);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }    
+    }
+    public void OnPush(InputAction.CallbackContext context)
+    {
+        if (currentPushBox == null) return;
+
+        if (context.started)
+        {　　　　
+            currentPushBox.SetPush(true);
+        }
+
+        if (context.canceled)
+        {
+            currentPushBox.SetPush(false);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Box"))
+        {
+            currentPushBox = other.GetComponent<PushBox>();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Box"))
+        {
+            currentPushBox = null;
+        }
     }
     void SendAnimState()
     {
