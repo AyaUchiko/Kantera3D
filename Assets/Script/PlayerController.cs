@@ -1,6 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Processors;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -35,6 +38,7 @@ public class PlayerController : MonoBehaviour
     private bool Right = true;
     private PushBox currentPushBox;
     private bool isPushAction = false;
+    private bool isDead = false;
     public float pushSpeed = 2f;
 
     public TextMeshProUGUI textState;
@@ -45,6 +49,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<PlayerAnimator>();
 
+        isDead = false;
+        currentState = EPlayerState.Stand;
         isGround = true;
     }
 
@@ -98,26 +104,24 @@ public class PlayerController : MonoBehaviour
         currentState = EPlayerState.Stand;
     }
 
-    private void OnCollisionEnter(Collision col)
+    private IEnumerator DeadProcess()
     {
-        if(col.gameObject.CompareTag("Ground"))
-        {
-            groundCount++;
-            isGround = true;
-        }
-    }
+        isDead = true;
+        currentState = EPlayerState.Dead;
+        rb.linearVelocity = Vector3.zero;
 
-    private void OnCollisionExit(Collision col)
-    {
-        if(col.gameObject.CompareTag("Ground"))
+        playerAnimator.ChangeState(PlayerAnimator.EPlayerAnimState.PlayerDead);
+
+        if (FadeManager.Instance != null)
         {
-            groundCount--;
-            if(groundCount<=0)
-            {
-                isGround = false;
-                groundCount = 0;
-            }
+            yield return StartCoroutine(FadeManager.Instance.FadeOut());
         }
+        else
+        {
+            yield return new WaitForSeconds(2.0f);
+        }
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     private void Move()
@@ -194,6 +198,11 @@ public class PlayerController : MonoBehaviour
         {
             currentPushBox = other.GetComponent<PushBox>();
         }
+
+        if (other.CompareTag("EnemyAttack") && !isDead)
+        {
+            StartCoroutine(DeadProcess());
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -201,6 +210,33 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Box"))
         {
             currentPushBox = null;
+        }
+    }
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.CompareTag("Ground"))
+        {
+            groundCount++;
+            isGround = true;
+        }
+
+        if (col.gameObject.CompareTag("Enemy") && !isDead)
+        {
+            StartCoroutine(DeadProcess());
+        }
+    }
+
+    private void OnCollisionExit(Collision col)
+    {
+        if (col.gameObject.CompareTag("Ground"))
+        {
+            groundCount--;
+            if (groundCount <= 0)
+            {
+                isGround = false;
+                groundCount = 0;
+            }
         }
     }
     void SendAnimState()

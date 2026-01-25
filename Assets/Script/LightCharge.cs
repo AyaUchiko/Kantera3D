@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class LightCharge : MonoBehaviour
 {
-    public GameObject eyeTriger;
-    public GameObject AttackTriger;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         
