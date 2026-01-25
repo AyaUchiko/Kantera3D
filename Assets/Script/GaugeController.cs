@@ -22,15 +22,6 @@ public class GaugeController : MonoBehaviour
 
     void Update()
     {
-        count -= Time.deltaTime;
-
-        if (count <= 0)
-        {
-            currentEnergy -= 1;
-            gaugeImage.fillAmount = currentEnergy / maxEnergy;
-            ResetCount();
-        }
-
         if (currentEnergy <= 0) return;
 
         ConsumeEnergy();
@@ -92,11 +83,9 @@ public class GaugeController : MonoBehaviour
         {
             currentEnergy = 0;
 
-            // プレイヤーのコンポーネントを探す
             PlayerController player = FindFirstObjectByType<PlayerController>();
             if (player != null)
             {
-                // PlayerController内の死亡処理をスタート！
                 player.StartCoroutine(player.DeadProcess());
             }
         }

@@ -13,7 +13,7 @@ public class EnemyWolf : MonoBehaviour
     {
         if(eyes!=null)
         {
-            attack.SetActive(false);
+            eyes.SetActive(false);
         }
         if(attack !=null)
         {
@@ -24,7 +24,6 @@ public class EnemyWolf : MonoBehaviour
     public void OnEnterDetectionArea()
     {
         if (eyes != null) eyes.SetActive(true);
-        Debug.Log("˜T‚ª‚±‚¿‚ç‚ðŒ©‚Ä‚¢‚é...");
     }
 
     public void OnEnterAttackArea(PlayerController player)
@@ -36,6 +35,7 @@ public class EnemyWolf : MonoBehaviour
             lightCtrl.range >= needRange)
         {
             Destroy(gameObject);
+            return;
         }
         else
         { 
