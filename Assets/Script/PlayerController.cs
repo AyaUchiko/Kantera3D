@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 moveInput;         
     private bool Right = true;
     private PushBox currentPushBox;
+    private bool isPushAction = false;
     public float pushSpeed = 2f;
 
     public TextMeshProUGUI textState;
@@ -51,7 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
 
-        if (currentPushBox != null)
+        if (currentPushBox != null && isPushAction == true)
         {
             currentPushBox.MoveBox(moveInput.x, pushSpeed);
         }
@@ -83,7 +84,14 @@ public class PlayerController : MonoBehaviour
         if (moveInput.x != 0)
         {
             currentState = EPlayerState.Walk;
-            moveSpeed = walkSpeed;
+            if (isPushAction == true)
+            {
+                moveSpeed = pushSpeed;
+            }
+            else
+            {
+                moveSpeed = walkSpeed;
+            }
             return;
         }
 
@@ -132,14 +140,16 @@ public class PlayerController : MonoBehaviour
     {
         moveInput = context.ReadValue<Vector2>();
 
-        //入力値のｘが０ではないときだけ向きをチェック
-        if (moveInput.x < 0 && Right)
+        if (isPushAction == false)
         {
-            Flip();
-        }
-        else if (moveInput.x > 0 && !Right)
-        {
-            Flip();
+            if (moveInput.x < 0 && Right)
+            {
+                Flip();
+            }
+            else if (moveInput.x > 0 && !Right)
+            {
+                Flip();
+            }
         }
     }
     public void OnDash(InputAction.CallbackContext context)
@@ -160,15 +170,21 @@ public class PlayerController : MonoBehaviour
     }
     public void OnPush(InputAction.CallbackContext context)
     {
-        if (currentPushBox == null) return;
+        if (currentPushBox == null)
+        {
+            isPushAction = false;
+            return;
+        }
 
         if (context.started)
-        {　　　　
+        {
+            isPushAction = true;
             currentPushBox.SetPush(true);
         }
 
         if (context.canceled)
         {
+            isPushAction = false;
             currentPushBox.SetPush(false);
         }
     }

@@ -16,8 +16,7 @@ public class LightController : MonoBehaviour
 
     public float range;            //現在の値を保持
     public float intensity;        //現在の値を保持
-    bool lightUp;
-    bool lightDown;
+    private float inputDirection;
 
     Light lt;
     public TextMeshProUGUI textRange;       //Rangeの値を表示するテキスト
@@ -35,35 +34,46 @@ public class LightController : MonoBehaviour
 
     void Update()
     {
-        if(lightUp)
+        if (inputDirection!=0)
         {
-            range += changeRange * Time.deltaTime;
-            if (range >= maxRange)
-            {
-                range = maxRange;
-            }
+            range += changeRange * inputDirection * Time.deltaTime;
+            range = Mathf.Clamp(range, miniRange, maxRange);
 
-            intensity += changeIntensity * Time.deltaTime;
-            if(intensity>=maxIntensity)
-            {
-                intensity = maxIntensity;
-            }
+            intensity += changeIntensity * inputDirection * Time.deltaTime;
+            intensity = Mathf.Clamp(intensity, miniIntensity, maxIntensity);
+
+            lt.range = range;
+            lt.intensity = intensity;
         }
+        //if(lightUp)
+        //{
+        //    range += changeRange * Time.deltaTime;
+        //    if (range >= maxRange)
+        //    {
+        //        range = maxRange;
+        //    }
 
-        if(lightDown)
-        {
-            range -= changeRange * Time.deltaTime;
-            if(range<=miniRange)
-            {
-                range = miniRange;
-            }
+        //    intensity += changeIntensity * Time.deltaTime;
+        //    if(intensity>=maxIntensity)
+        //    {
+        //        intensity = maxIntensity;
+        //    }
+        //}
 
-            intensity -= changeIntensity * Time.deltaTime;
-            if (intensity <= miniIntensity)
-            {
-                intensity = miniIntensity;
-            }
-        }
+        //if(lightDown)
+        //{
+        //    range -= changeRange * Time.deltaTime;
+        //    if(range<=miniRange)
+        //    {
+        //        range = miniRange;
+        //    }
+
+        //    intensity -= changeIntensity * Time.deltaTime;
+        //    if (intensity <= miniIntensity)
+        //    {
+        //        intensity = miniIntensity;
+        //    }
+        //}
 
         lt.range = range;
         lt.intensity = intensity;
@@ -72,28 +82,32 @@ public class LightController : MonoBehaviour
         textIntensity.text = "Light.intensity:" + intensity.ToString();
     }
 
-    public void OnLightUp(InputAction.CallbackContext context)
+    public void OnLighChange(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            lightUp = true;
-        }
-
-        if (context.canceled)
-        {
-            lightUp = false;
-        }
+        inputDirection = context.ReadValue<float>();
     }
-    public void OnLightDown(InputAction.CallbackContext context)
-    {
-        if(context.performed)
-        {
-            lightDown = true;
-        }
+    //public void OnLightUp(InputAction.CallbackContext context)
+    //{
+    //    if (context.performed)
+    //    {
+    //        lightUp = true;
+    //    }
 
-        if(context.canceled)
-        {
-            lightDown = false;
-        }
-    }
+    //    if (context.canceled)
+    //    {
+    //        lightUp = false;
+    //    }
+    //}
+    //public void OnLightDown(InputAction.CallbackContext context)
+    //{
+    //    if(context.performed)
+    //    {
+    //        lightDown = true;
+    //    }
+
+    //    if(context.canceled)
+    //    {
+    //        lightDown = false;
+    //    }
+    //}
 }
