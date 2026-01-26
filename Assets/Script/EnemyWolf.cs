@@ -2,11 +2,9 @@ using UnityEngine;
 
 public class EnemyWolf : MonoBehaviour
 {
-    [Header("ï\é¶ê›íË")]
     public GameObject eyes;
     public GameObject attack;
 
-    [Header("åÇëﬁê›íË")]
     public float needIntensity = 30f;
     public float needRange = 4f;
     void Start()
@@ -30,9 +28,7 @@ public class EnemyWolf : MonoBehaviour
     {
         LightController lightCtrl = FindFirstObjectByType<LightController>();
 
-        if (lightCtrl != null &&
-            lightCtrl.intensity >= needIntensity &&
-            lightCtrl.range >= needRange)
+        if (lightCtrl != null &&lightCtrl.intensity >= needIntensity &&lightCtrl.range >= needRange)
         {
             Destroy(gameObject);
             return;

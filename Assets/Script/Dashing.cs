@@ -17,8 +17,6 @@ public class Dashing : MonoBehaviour
     [Header("クールダウン")]
     public float dashCd;        //ダッシュのクールダウン時間
     private float dashCdTimer;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();

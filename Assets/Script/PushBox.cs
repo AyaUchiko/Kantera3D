@@ -3,42 +3,33 @@ using UnityEngine;
 public class PushBox : MonoBehaviour
 {
     private Rigidbody boxRb;
-    private bool isPushing;
+    private bool isPush;
 
     void Start()
     {
         boxRb = GetComponent<Rigidbody>();
-
-        boxRb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
-
-        boxRb.constraints |= RigidbodyConstraints.FreezePositionX;
     }
 
     public void SetPush(bool push)
     {
-        isPushing = push;
+        isPush = push;
+        boxRb.isKinematic = !push;
 
-        if (isPushing)
+        if (!push)
         {
-            boxRb.constraints &= ~RigidbodyConstraints.FreezePositionX;
-        }
-        else
-        {
-            boxRb.linearVelocity = new Vector3(0, boxRb.linearVelocity.y, 0);
-            boxRb.constraints |= RigidbodyConstraints.FreezePositionX;
+            boxRb.linearVelocity = Vector3.zero;
         }
     }
 
     public void MoveBox(float inputX, float speed)
     {
-        if (!isPushing) return;
+        if (!isPush) return;
 
         if (Mathf.Abs(inputX) < 0.1f)
         {
             boxRb.linearVelocity = new Vector3(0, boxRb.linearVelocity.y, 0);
             return;
         }
-
         boxRb.linearVelocity = new Vector3(inputX * speed, boxRb.linearVelocity.y, 0f);
     }
 }

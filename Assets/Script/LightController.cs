@@ -4,12 +4,10 @@ using TMPro;
 
 public class LightController : MonoBehaviour
 {
-    [Header("Range設定")]
     public float changeRange;      //変更値
     public float maxRange;         //最大範囲
     public float miniRange;        //最小範囲
 
-    [Header("Intensity設定")]
     public float changeIntensity;  //変更値
     public float maxIntensity;     //最大範囲
     public float miniIntensity;    //最小範囲

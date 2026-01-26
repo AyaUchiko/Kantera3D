@@ -7,7 +7,6 @@ using System.Linq;
 public class TitleManager : MonoBehaviour
 {
     private bool isStarting = false;
-
     void Update()
     {
         if (isStarting) return;

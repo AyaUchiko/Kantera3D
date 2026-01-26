@@ -6,7 +6,7 @@ public class EnemyPatrol : MonoBehaviour
     public float moveSpeed;
     public float patrolRange;
     private Vector3 startPos;
-    private bool movingRight = true;
+    private bool moveRight = true;
     void Start()
     {
         startPos = transform.position;
@@ -17,12 +17,12 @@ public class EnemyPatrol : MonoBehaviour
         float currentX = transform.position.x;
 
         {
-            if(movingRight)
+            if(moveRight)
             {
                 transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
                 if(currentX>=startPos.x+patrolRange)
                 {
-                    movingRight = false;
+                    moveRight = false;
                 }
             }
             else
@@ -30,7 +30,7 @@ public class EnemyPatrol : MonoBehaviour
                 transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
                 if(currentX<=startPos.x-patrolRange)
                 {
-                    movingRight = true;
+                    moveRight = true;
                 }
             }
         }

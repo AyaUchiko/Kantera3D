@@ -37,7 +37,6 @@ public class SwitchController : MonoBehaviour
             cageRb.isKinematic = false;
         }
     }
-
     private void OnTriggerEnter(Collider other)
     {
         check = true;

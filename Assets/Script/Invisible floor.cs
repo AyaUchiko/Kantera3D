@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Invisiblefloor: MonoBehaviour
 {
-    [Header("•\¦ğŒ")]
     public float needIntensity = 35f;
 
     private MeshRenderer meshRenderer;

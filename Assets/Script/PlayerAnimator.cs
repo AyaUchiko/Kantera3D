@@ -64,8 +64,6 @@ public class PlayerAnimator : MonoBehaviour
             default: return "";
         }
     }
-
-    // Update is called once per frame
     private void Update()
     {
         if(!isEnter)
