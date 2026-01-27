@@ -17,11 +17,11 @@ public class Invisiblefloor: MonoBehaviour
 
     void Update()
     {
-        LightController lightCtrl = FindFirstObjectByType<LightController>();
+        LightController lightCtr = FindFirstObjectByType<LightController>();
 
-        if (lightCtrl != null)
+        if (lightCtr != null)
         {
-            bool isVisible = lightCtrl.intensity >= needIntensity;
+            bool isVisible = lightCtr.intensity >= needIntensity;
 
             if (meshRenderer != null)
             {

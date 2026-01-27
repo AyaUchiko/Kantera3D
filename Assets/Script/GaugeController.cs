@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;       //UI‚ðŽg‚¤‚½‚ß‚É•K—v
 using TMPro;
-
 public class GaugeController : MonoBehaviour
 {
     [SerializeField] LightController lightController;

@@ -25,7 +25,7 @@ public class SwitchController : MonoBehaviour
             else
             {
                 cageRb.isKinematic = true;
-                cageRb.linearVelocity = Vector3.zero;
+                //cageRb.linearVelocity = Vector3.zero;
 
                 Vector3 pos = cage.transform.position;
                 pos.y = maxHeight;
